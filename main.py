@@ -6,8 +6,8 @@ tileset_image = pyglet.resource.image('sample_tileset.png')
 tileset_grid = pyglet.image.ImageGrid(tileset_image, 2, 2)
 tileset = pyglet.image.TextureGrid(tileset_grid)
 
-map_width = 9
-map_height = 9
+map_width = 20
+map_height = 20
 level_map = []
 with open('sample_map.txt', 'r') as mapfile:
     for line in mapfile:
@@ -23,6 +23,6 @@ def on_draw():
             # columns are iterated normally
             # this reads the level map from the bottom-left,
             # as is the rendering done in pyglet (0,0 is bottom left)
-            tileset[level_map[map_height * row_idx + col_idx] - 1].blit(row_idx*32, col_idx*32)
+            tileset[level_map[map_height * row_idx + col_idx] - 1].blit(col_idx*32, (map_height - (row_idx + 1))*32)
 
 pyglet.app.run()
