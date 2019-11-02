@@ -1,0 +1,19 @@
+1: # stone floor
+  sheet_x: 0
+  sheet_y: 0
+
+2: # vertical stone wall
+  sheet_x: 1
+  sheet_y: 0
+
+3: # horizontal stone wall
+  sheet_x: 0
+  sheet_y: 1
+
+4: # corner stone wall
+  sheet_x: 1
+  sheet_y: 1
+
+5: # ningen
+  sheet_x: 2
+  sheet_y: 1
