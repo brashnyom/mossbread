@@ -8,7 +8,7 @@ class GameMap(list):
     def __getitem__(self, index):
         return self.map_data[index]
 
-    def load_mapfile(self, path):
+    def load_mapfile(self, path: str) -> None:
         self.map_width = 0
         self.map_height = 0
         self.map_data = []

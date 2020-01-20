@@ -34,7 +34,7 @@ def on_draw():
     rendering.window.clear()
     rendering.draw_map()
     for entity in entities:
-        rendering.draw_relative(entity.x, entity.y, entity.tile_num)
+        rendering.draw_tile_relative(entity.x, entity.y, entity.tile_num)
 
 
 pyglet.app.run()

@@ -1,12 +1,16 @@
 import pyglet
 import yaml
 
+from typing import Dict
+
+from game_map import GameMap
+
 
 class Rendering:
     TILE_SIZE = 32
     TILESET_PATH = 'sample_tileset.png'
 
-    def __init__(self, game_map=None):
+    def __init__(self, game_map: GameMap = None):
         self.window = pyglet.window.Window()
 
         # Window size should be a multiplier of
@@ -37,17 +41,17 @@ class Rendering:
         self.camera_y = 0
 
     @staticmethod
-    def load_tile_data():
+    def load_tile_data() -> Dict[int, Dict[str, int]]:
         tile_data_file = pyglet.resource.file('tiles.yml')
         tile_data = yaml.safe_load(tile_data_file)
         tile_data_file.close()
         return tile_data
 
-    def center_camera(self, x, y):
+    def center_camera(self, x: int, y: int):
         self.camera_x = x - self.camera_center_offset_x
         self.camera_y = y - self.camera_center_offset_y
 
-    def draw_tile(self, x, y, tile):
+    def draw_tile(self, x: int, y: int, tile: int):
         sheet_x = self.tile_data[tile]['sheet_x']
         sheet_y = self.tile_data[tile]['sheet_y']
 
@@ -56,7 +60,7 @@ class Rendering:
             y * self.TILE_SIZE
         )
 
-    def draw_relative(self, x, y, tile):
+    def draw_tile_relative(self, x: int, y: int, tile: int):
         self.draw_tile(x - self.camera_x, y - self.camera_y, tile)
 
     def draw_map(self):
@@ -70,4 +74,4 @@ class Rendering:
                                      * row_idx + col_idx]
                 x_pos = col_idx
                 y_pos = (self.game_map.map_height - (row_idx + 1))
-                self.draw_relative(x_pos, y_pos, tile)
+                self.draw_tile_relative(x_pos, y_pos, tile)
