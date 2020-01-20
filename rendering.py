@@ -29,6 +29,10 @@ class Rendering:
 
         self.game_map = game_map
 
+        self.window_width_tiles = int(self.window.width / self.TILE_SIZE)
+        self.window_height_tiles = int(self.window.height / self.TILE_SIZE)
+        self.camera_center_offset_x = int(self.window_width_tiles / 2)
+        self.camera_center_offset_y = int(self.window_height_tiles / 2)
         self.camera_x = 0
         self.camera_y = 0
 
@@ -38,6 +42,10 @@ class Rendering:
         tile_data = yaml.safe_load(tile_data_file)
         tile_data_file.close()
         return tile_data
+
+    def center_camera(self, x, y):
+        self.camera_x = x - self.camera_center_offset_x
+        self.camera_y = y - self.camera_center_offset_y
 
     def draw_tile(self, x, y, tile):
         sheet_x = self.tile_data[tile]['sheet_x']

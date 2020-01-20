@@ -13,18 +13,20 @@ player = PlayerEntity()
 player.x = 1
 player.y = 1
 entities.append(player)
+rendering.center_camera(player.x, player.y)
 
 
 @rendering.window.event
 def on_key_press(symbol, modifiers):
     if symbol == key.W:
-        rendering.camera_y += 1
+        player.y += 1
     elif symbol == key.S:
-        rendering.camera_y -= 1
+        player.y -= 1
     elif symbol == key.D:
-        rendering.camera_x += 1
+        player.x += 1
     elif symbol == key.A:
-        rendering.camera_x -= 1
+        player.x -= 1
+    rendering.center_camera(player.x, player.y)
 
 
 @rendering.window.event
