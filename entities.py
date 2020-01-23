@@ -10,7 +10,6 @@ class BaseEntity:
 
 
 class PlayerEntity(BaseEntity):
-
     def __init__(self):
         super(PlayerEntity, self).__init__()
         self.tile_num = 5

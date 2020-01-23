@@ -8,7 +8,7 @@ from game_map import GameMap
 
 class Rendering:
     TILE_SIZE = 32
-    TILESET_PATH = 'sample_tileset.png'
+    TILESET_PATH = "sample_tileset.png"
 
     def __init__(self, game_map: GameMap = None):
         self.window = pyglet.window.Window()
@@ -26,7 +26,8 @@ class Rendering:
         tileset_height = int(tileset_image.height / self.TILE_SIZE)
 
         tileset_grid = pyglet.image.ImageGrid(
-            tileset_image, tileset_height, tileset_width)
+            tileset_image, tileset_height, tileset_width
+        )
         self.tileset = pyglet.image.TextureGrid(tileset_grid)
 
         self.tile_data = Rendering.load_tile_data()
@@ -42,7 +43,7 @@ class Rendering:
 
     @staticmethod
     def load_tile_data() -> Dict[int, Dict[str, int]]:
-        tile_data_file = pyglet.resource.file('tiles.yml')
+        tile_data_file = pyglet.resource.file("tiles.yml")
         tile_data = yaml.safe_load(tile_data_file)
         tile_data_file.close()
         return tile_data
@@ -52,26 +53,22 @@ class Rendering:
         self.camera_y = y - self.camera_center_offset_y
 
     def draw_tile(self, x: int, y: int, tile: int):
-        sheet_x = self.tile_data[tile]['sheet_x']
-        sheet_y = self.tile_data[tile]['sheet_y']
+        sheet_x = self.tile_data[tile]["sheet_x"]
+        sheet_y = self.tile_data[tile]["sheet_y"]
 
-        self.tileset[sheet_y, sheet_x].blit(
-            x * self.TILE_SIZE,
-            y * self.TILE_SIZE
-        )
+        self.tileset[sheet_y, sheet_x].blit(x * self.TILE_SIZE, y * self.TILE_SIZE)
 
     def draw_tile_relative(self, x: int, y: int, tile: int):
         self.draw_tile(x - self.camera_x, y - self.camera_y, tile)
 
     def draw_map(self):
         # iterate rows in reverse (0-based)
-        for row_idx in range(self.game_map.map_height-1, -1, -1):
+        for row_idx in range(self.game_map.map_height - 1, -1, -1):
             # columns are iterated normally
             # this reads the level map from the bottom-left,
             # as is the rendering done in pyglet (0,0 is bottom left)
             for col_idx in range(0, self.game_map.map_width):
-                tile = self.game_map[self.game_map.map_height
-                                     * row_idx + col_idx]
+                tile = self.game_map[self.game_map.map_height * row_idx + col_idx]
                 x_pos = col_idx
-                y_pos = (self.game_map.map_height - (row_idx + 1))
+                y_pos = self.game_map.map_height - (row_idx + 1)
                 self.draw_tile_relative(x_pos, y_pos, tile)
