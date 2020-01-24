@@ -1,11 +1,7 @@
 from rendering import Rendering
 
 
-class BaseEntity:
-    """
-    Serves as a template for entities in the world.
-    """
-
+class Entity:
     def __init__(self, x, y, sprite):
         self.x = x
         self.y = y
