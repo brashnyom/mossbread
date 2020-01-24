@@ -22,16 +22,34 @@ entities.append(npc)
 rendering.center_camera(player.x, player.y)
 
 
+def move_entity(entity_idx: int, x: int, y: int):
+    target_entity = entities[entity_idx]
+    potential_map_tile = game_map.get(
+        target_entity.x + x, game_map.height - (target_entity.y + y + 1)
+    )
+    if potential_map_tile != 1:
+        return
+
+    for idx, entity in enumerate(entities):
+        if idx == entity_idx:
+            continue
+        if (target_entity.x + x) == entity.x and (target_entity.y + y) == entity.y:
+            return
+
+    target_entity.x += x
+    target_entity.y += y
+
+
 @rendering.window.event
 def on_key_press(symbol, modifiers):
     if symbol == key.W:
-        player.y += 1
+        move_entity(0, 0, 1)
     elif symbol == key.S:
-        player.y -= 1
+        move_entity(0, 0, -1)
     elif symbol == key.D:
-        player.x += 1
+        move_entity(0, 1, 0)
     elif symbol == key.A:
-        player.x -= 1
+        move_entity(0, -1, 0)
     rendering.center_camera(player.x, player.y)
 
 
