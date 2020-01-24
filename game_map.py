@@ -13,8 +13,7 @@ class GameMap:
 
     @staticmethod
     def from_file(path: str, delimiter: str = ",") -> "GameMap":
-        map_data, width, height = GameMap.load_mapfile(path, delimiter)
-        return GameMap(map_data, width, height)
+        return GameMap(*GameMap.load_mapfile(path, delimiter))
 
     @staticmethod
     def load_mapfile(path: str, delimiter: str = ",") -> Tuple[array, int, int]:

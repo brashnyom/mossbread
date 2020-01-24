@@ -1,15 +1,16 @@
+from rendering import Rendering
+
+
 class BaseEntity:
     """
     Serves as a template for entities in the world.
     """
 
-    def __init__(self):
-        self.x = 0
-        self.y = 0
-        self.tile_num = None
+    def __init__(self, x, y, sprite):
+        self.x = x
+        self.y = y
+        self.sprite = sprite
 
-
-class PlayerEntity(BaseEntity):
-    def __init__(self):
-        super(PlayerEntity, self).__init__()
-        self.tile_num = 5
+    def update_sprite_pos(self, x: int, y: int):
+        self.sprite.x = x * Rendering.TILE_SIZE
+        self.sprite.y = y * Rendering.TILE_SIZE

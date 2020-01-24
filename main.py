@@ -1,17 +1,19 @@
 import pyglet
 from pyglet.window import key
+from pyglet.sprite import Sprite
 from rendering import Rendering
 from game_map import GameMap
-from entities import PlayerEntity
+
+from entities import BaseEntity
 
 
 game_map = GameMap.from_file("sample_map.txt")
 rendering = Rendering(game_map)
-entities = list()
-player = PlayerEntity()
-player.x = 1
-player.y = 1
-entities.append(player)
+
+player_image = rendering.get_tile_as_image(5)
+player_sprite = Sprite(player_image, 0, 0)
+
+player = BaseEntity(1, 1, player_sprite)
 rendering.center_camera(player.x, player.y)
 
 
@@ -32,8 +34,8 @@ def on_key_press(symbol, modifiers):
 def on_draw():
     rendering.window.clear()
     rendering.draw_map()
-    for entity in entities:
-        rendering.draw_tile_relative(entity.x, entity.y, entity.tile_num)
+    player.update_sprite_pos(*rendering.relative_to_camera(player.x, player.y))
+    player.sprite.draw()
 
 
 pyglet.app.run()

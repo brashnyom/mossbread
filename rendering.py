@@ -41,18 +41,23 @@ class Rendering:
         tile_data_file.close()
         return tile_data
 
+    def get_tile_as_image(self, tile: int):
+        sheet_x = self.tile_data[tile]["sheet_x"]
+        sheet_y = self.tile_data[tile]["sheet_y"]
+        return self.tileset[sheet_y, sheet_x]
+
     def center_camera(self, x: int, y: int):
         self.camera_x = x - self.camera_center_offset_x
         self.camera_y = y - self.camera_center_offset_y
 
-    def draw_tile(self, x: int, y: int, tile: int):
-        sheet_x = self.tile_data[tile]["sheet_x"]
-        sheet_y = self.tile_data[tile]["sheet_y"]
+    def relative_to_camera(self, x: int, y: int):
+        return x - self.camera_x, y - self.camera_y
 
-        self.tileset[sheet_y, sheet_x].blit(x * self.TILE_SIZE, y * self.TILE_SIZE)
+    def draw_tile(self, x: int, y: int, tile: int):
+        self.get_tile_as_image(tile).blit(x * self.TILE_SIZE, y * self.TILE_SIZE)
 
     def draw_tile_relative(self, x: int, y: int, tile: int):
-        self.draw_tile(x - self.camera_x, y - self.camera_y, tile)
+        self.draw_tile(*self.relative_to_camera(x, y), tile)  # type: ignore
 
     def draw_map(self):
         # Read the level map from the bottom-left,
