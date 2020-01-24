@@ -1,28 +1,39 @@
-class GameMap(list):
-    def __init__(self):
-        self.map_width = 0
-        self.map_height = 0
-        self.map_data = []
+from array import array
+from typing import Tuple
 
-    def __getitem__(self, index):
-        return self.map_data[index]
 
-    def load_mapfile(self, path: str) -> None:
-        self.map_width = 0
-        self.map_height = 0
-        self.map_data = []
+class GameMap:
+    def __init__(self, map_data: array, width: int, height: int):
+        self.map_data = map_data
+        self.width = width
+        self.height = height
 
-        # Automatically determines map width and height,
-        # but works only with rectangular maps
+    def get(self, x: int, y: int) -> int:
+        return self.map_data[(y * self.height) + x]
+
+    @staticmethod
+    def from_file(path: str, delimiter: str = ",") -> "GameMap":
+        map_data, width, height = GameMap.load_mapfile(path, delimiter)
+        return GameMap(map_data, width, height)
+
+    @staticmethod
+    def load_mapfile(path: str, delimiter: str = ",") -> Tuple[array, int, int]:
+        # Works only with rectangular maps
+        map_width, map_height = 0, 0
+        map_data = array("I")
+
         with open(path, "r") as mapfile:
             for line in mapfile:
-                self.map_height += 1
+                split_line = line.strip().split(delimiter)
 
-                split_line = line.strip().split(",")
-                for sym in split_line:
-                    self.map_data.append(int(sym))
-
-                if self.map_width == 0:
-                    self.map_width = len(split_line)
+                if map_width == 0:
+                    map_width = len(split_line)
                 else:
-                    assert len(split_line) == self.map_width
+                    assert len(split_line) == map_width
+
+                map_height += 1
+
+                for symbol in split_line:
+                    map_data.append(int(symbol))
+
+        return map_data, map_width, map_height

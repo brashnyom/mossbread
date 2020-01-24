@@ -5,8 +5,7 @@ from game_map import GameMap
 from entities import PlayerEntity
 
 
-game_map = GameMap()
-game_map.load_mapfile("sample_map.txt")
+game_map = GameMap.from_file("sample_map.txt")
 rendering = Rendering(game_map)
 entities = list()
 player = PlayerEntity()

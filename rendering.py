@@ -11,27 +11,20 @@ class Rendering:
     TILESET_PATH = "sample_tileset.png"
 
     def __init__(self, game_map: GameMap = None):
-        self.window = pyglet.window.Window()
-
-        # Window size should be a multiplier of
-        # TILE_SIZE to avoid half-drawn tiles
-        assert self.window.width % self.TILE_SIZE == 0
-        assert self.window.height % self.TILE_SIZE == 0
+        self.window = pyglet.window.Window(800, 600)
 
         tileset_image = pyglet.resource.image(self.TILESET_PATH)
-
         assert tileset_image.width % self.TILE_SIZE == 0
-        tileset_width = int(tileset_image.width / self.TILE_SIZE)
         assert tileset_image.height % self.TILE_SIZE == 0
-        tileset_height = int(tileset_image.height / self.TILE_SIZE)
 
-        tileset_grid = pyglet.image.ImageGrid(
-            tileset_image, tileset_height, tileset_width
+        self.tileset_grid = pyglet.image.ImageGrid(
+            tileset_image,
+            int(tileset_image.height / self.TILE_SIZE),
+            int(tileset_image.width / self.TILE_SIZE),
         )
-        self.tileset = pyglet.image.TextureGrid(tileset_grid)
+        self.tileset = pyglet.image.TextureGrid(self.tileset_grid)
 
         self.tile_data = Rendering.load_tile_data()
-
         self.game_map = game_map
 
         self.window_width_tiles = int(self.window.width / self.TILE_SIZE)
@@ -62,13 +55,12 @@ class Rendering:
         self.draw_tile(x - self.camera_x, y - self.camera_y, tile)
 
     def draw_map(self):
-        # iterate rows in reverse (0-based)
-        for row_idx in range(self.game_map.map_height - 1, -1, -1):
-            # columns are iterated normally
-            # this reads the level map from the bottom-left,
-            # as is the rendering done in pyglet (0,0 is bottom left)
-            for col_idx in range(0, self.game_map.map_width):
-                tile = self.game_map[self.game_map.map_height * row_idx + col_idx]
+        # Read the level map from the bottom-left,
+        # since (0,0) in pyglet is bottom-left
+        for row_idx in range(0, self.game_map.height):
+            y_pos = self.game_map.height - (row_idx + 1)
+            for col_idx in range(0, self.game_map.width):
                 x_pos = col_idx
-                y_pos = self.game_map.map_height - (row_idx + 1)
-                self.draw_tile_relative(x_pos, y_pos, tile)
+                self.draw_tile_relative(
+                    x_pos, y_pos, self.game_map.get(col_idx, row_idx)
+                )
