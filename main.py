@@ -1,14 +1,28 @@
 import pyglet
+import yaml
+
+from typing import Dict
+
 from pyglet.window import key
+
 from rendering import Rendering
 from game_map import GameMap
-
 from entities import EntityHandler
 
 
+def load_tile_data(filepath: str) -> Dict[int, Dict[str, int]]:
+    tile_data_file = pyglet.resource.file(filepath)
+    tile_data = yaml.safe_load(tile_data_file)
+    tile_data_file.close()
+    return tile_data
+
+
+tile_data = load_tile_data("tiles.yml")
+
+
 game_map = GameMap.from_file("sample_map.txt")
-rendering = Rendering(game_map)
-entity_handler = EntityHandler(game_map, rendering)
+rendering = Rendering(game_map, tile_data)
+entity_handler = EntityHandler(game_map, rendering, tile_data)
 
 entity_handler.spawn_entity(1, 1, 5)
 entity_handler.spawn_entity(15, 15, 5)

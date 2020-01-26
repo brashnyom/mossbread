@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, Any
 
 from pyglet.sprite import Sprite
 
@@ -7,11 +7,17 @@ from game_map import GameMap
 
 
 class EntityHandler:
-    def __init__(self, game_map: GameMap, rendering: Rendering):
+    def __init__(
+        self,
+        game_map: GameMap,
+        rendering: Rendering,
+        tile_data: Dict[int, Dict[str, Any]],
+    ):
         self.entities: Dict[int, Entity] = dict()
         self.entity_id_tracker = 0
         self.game_map = game_map
         self.rendering = rendering
+        self.tile_data = tile_data
 
     def spawn_entity(self, x: int, y: int, tile: int):
         # TODO Implement re-use of free entity IDs left behind
@@ -26,7 +32,7 @@ class EntityHandler:
         potential_map_tile = self.game_map.get(
             target_entity.x + x, self.game_map.height - (target_entity.y + y + 1)
         )
-        if potential_map_tile != 1:
+        if self.tile_data[potential_map_tile]["solid"]:
             return
 
         for entity_id, entity in self.entities.items():

@@ -1,7 +1,6 @@
 import pyglet
-import yaml
 
-from typing import Dict
+from typing import Dict, Any
 
 from game_map import GameMap
 
@@ -10,7 +9,7 @@ class Rendering:
     TILE_SIZE = 32
     TILESET_PATH = "sample_tileset.png"
 
-    def __init__(self, game_map: GameMap = None):
+    def __init__(self, game_map: GameMap, tile_data: Dict[int, Dict[str, Any]]):
         self.window = pyglet.window.Window(800, 600)
 
         tileset_image = pyglet.resource.image(self.TILESET_PATH)
@@ -24,7 +23,7 @@ class Rendering:
         )
         self.tileset = pyglet.image.TextureGrid(self.tileset_grid)
 
-        self.tile_data = Rendering.load_tile_data()
+        self.tile_data = tile_data
         self.game_map = game_map
 
         self.window_width_tiles = int(self.window.width / self.TILE_SIZE)
@@ -33,13 +32,6 @@ class Rendering:
         self.camera_center_offset_y = int(self.window_height_tiles / 2)
         self.camera_x = 0
         self.camera_y = 0
-
-    @staticmethod
-    def load_tile_data() -> Dict[int, Dict[str, int]]:
-        tile_data_file = pyglet.resource.file("tiles.yml")
-        tile_data = yaml.safe_load(tile_data_file)
-        tile_data_file.close()
-        return tile_data
 
     def get_tile_as_image(self, tile: int):
         sheet_x = self.tile_data[tile]["sheet_x"]
