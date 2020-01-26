@@ -1,6 +1,7 @@
 import pyglet
 
 from typing import Dict, Any
+from math import ceil
 
 from game_map import GameMap
 
@@ -26,8 +27,8 @@ class Rendering:
         self.tile_data = tile_data
         self.game_map = game_map
 
-        self.window_width_tiles = int(self.window.width / self.TILE_SIZE)
-        self.window_height_tiles = int(self.window.height / self.TILE_SIZE)
+        self.window_width_tiles = int(ceil(self.window.width / self.TILE_SIZE))
+        self.window_height_tiles = int(ceil(self.window.height / self.TILE_SIZE))
         self.camera_center_offset_x = int(self.window_width_tiles / 2)
         self.camera_center_offset_y = int(self.window_height_tiles / 2)
         self.camera_x = 0
@@ -54,10 +55,15 @@ class Rendering:
     def draw_map(self):
         # Read the level map from the bottom-left,
         # since (0,0) in pyglet is bottom-left
-        for row_idx in range(0, self.game_map.height):
-            y_pos = self.game_map.height - (row_idx + 1)
-            for col_idx in range(0, self.game_map.width):
-                x_pos = col_idx
+        start_x, start_y = max(self.camera_x, 0), max(self.camera_y, 0)
+        rel_x, rel_y = self.relative_to_camera(start_x, start_y)
+        end_x = self.window_width_tiles - rel_x
+        end_y = self.window_height_tiles - rel_y
+
+        for y_pos in range(start_y, min(start_y + end_y, self.game_map.height)):
+            row_idx = self.game_map.height - (y_pos + 1)
+            for x_pos in range(start_x, min(start_x + end_x, self.game_map.width)):
+                col_idx = x_pos
                 self.draw_tile_relative(
                     x_pos, y_pos, self.game_map.get(col_idx, row_idx)
                 )

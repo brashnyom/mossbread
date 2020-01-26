@@ -9,6 +9,8 @@ class GameMap:
         self.height = height
 
     def get(self, x: int, y: int) -> int:
+        assert x >= 0 and x <= self.width, x
+        assert y >= 0 and y <= self.height, y
         return self.map_data[(y * self.height) + x]
 
     @staticmethod
