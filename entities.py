@@ -29,9 +29,7 @@ class EntityHandler:
 
     def move_entity(self, target_entity_id: int, x: int, y: int):
         target_entity = self.entities[target_entity_id]
-        potential_map_tile = self.game_map.get(
-            target_entity.x + x, self.game_map.height - (target_entity.y + y + 1)
-        )
+        potential_map_tile = self.game_map.get(target_entity.x + x, target_entity.y + y)
         if self.tile_data[potential_map_tile]["solid"]:
             return
 

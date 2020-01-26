@@ -53,17 +53,11 @@ class Rendering:
         self.draw_tile(*self.relative_to_camera(x, y), tile)  # type: ignore
 
     def draw_map(self):
-        # Read the level map from the bottom-left,
-        # since (0,0) in pyglet is bottom-left
         start_x, start_y = max(self.camera_x, 0), max(self.camera_y, 0)
         rel_x, rel_y = self.relative_to_camera(start_x, start_y)
         end_x = self.window_width_tiles - rel_x
         end_y = self.window_height_tiles - rel_y
 
         for y_pos in range(start_y, min(start_y + end_y, self.game_map.height)):
-            row_idx = self.game_map.height - (y_pos + 1)
             for x_pos in range(start_x, min(start_x + end_x, self.game_map.width)):
-                col_idx = x_pos
-                self.draw_tile_relative(
-                    x_pos, y_pos, self.game_map.get(col_idx, row_idx)
-                )
+                self.draw_tile_relative(x_pos, y_pos, self.game_map.get(x_pos, y_pos))
