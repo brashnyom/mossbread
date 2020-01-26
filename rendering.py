@@ -8,7 +8,7 @@ from game_map import GameMap
 
 class Rendering:
     TILE_SIZE = 32
-    TILESET_PATH = "sample_tileset.png"
+    TILESET_PATH = "assets/sample_tileset.png"
 
     def __init__(self, game_map: GameMap, tile_data: Dict[int, Dict[str, Any]]):
         self.window = pyglet.window.Window(800, 600)

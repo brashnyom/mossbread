@@ -17,10 +17,10 @@ def load_tile_data(filepath: str) -> Dict[int, Dict[str, int]]:
     return tile_data
 
 
-tile_data = load_tile_data("tiles.yml")
+tile_data = load_tile_data("assets/tiles.yml")
 
 
-game_map = GameMap.from_file("sample_map.txt")
+game_map = GameMap.from_file("assets/sample_map.txt")
 rendering = Rendering(game_map, tile_data)
 entity_handler = EntityHandler(game_map, rendering, tile_data)
 
