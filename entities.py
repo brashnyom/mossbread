@@ -1,4 +1,4 @@
-from typing import List
+from typing import Dict
 
 from pyglet.sprite import Sprite
 
@@ -8,25 +8,29 @@ from game_map import GameMap
 
 class EntityHandler:
     def __init__(self, game_map: GameMap, rendering: Rendering):
-        self.entities: List[Entity] = list()
+        self.entities: Dict[int, Entity] = dict()
+        self.entity_id_tracker = 0
         self.game_map = game_map
         self.rendering = rendering
 
     def spawn_entity(self, x: int, y: int, tile: int):
-        self.entities.append(
-            Entity(x, y, Sprite(self.rendering.get_tile_as_image(tile), 0, 0))
+        # TODO Implement re-use of free entity IDs left behind
+        # after an entity is deleted
+        self.entities[self.entity_id_tracker] = Entity(
+            x, y, Sprite(self.rendering.get_tile_as_image(tile), 0, 0)
         )
+        self.entity_id_tracker += 1
 
-    def move_entity(self, entity_idx: int, x: int, y: int):
-        target_entity = self.entities[entity_idx]
+    def move_entity(self, target_entity_id: int, x: int, y: int):
+        target_entity = self.entities[target_entity_id]
         potential_map_tile = self.game_map.get(
             target_entity.x + x, self.game_map.height - (target_entity.y + y + 1)
         )
         if potential_map_tile != 1:
             return
 
-        for idx, entity in enumerate(self.entities):
-            if idx == entity_idx:
+        for entity_id, entity in self.entities.items():
+            if entity_id == target_entity_id:
                 continue
             if (target_entity.x + x) == entity.x and (target_entity.y + y) == entity.y:
                 return
@@ -35,7 +39,7 @@ class EntityHandler:
         target_entity.y += y
 
     def update_entities(self):
-        for entity in self.entities:
+        for entity in self.entities.values():
             entity.update_sprite_pos(
                 *self.rendering.relative_to_camera(entity.x, entity.y)
             )
