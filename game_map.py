@@ -14,10 +14,6 @@ class GameMap:
         return self.map_data[y][x]
 
     @staticmethod
-    def from_file(path: str, delimiter: str = ",") -> "GameMap":
-        return GameMap(*GameMap.load_mapfile(path, delimiter))
-
-    @staticmethod
     def load_mapfile(path: str, delimiter: str = ",") -> Tuple[tuple, int, int]:
         # Works only with rectangular maps
         map_width, map_height = 0, 0
@@ -40,3 +36,7 @@ class GameMap:
                 map_data.append(map_row)
 
         return tuple(map_data), map_width, map_height
+
+    @staticmethod
+    def from_file(path: str, delimiter: str = ",") -> "GameMap":
+        return GameMap(*GameMap.load_mapfile(path, delimiter))
