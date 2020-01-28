@@ -1,6 +1,7 @@
-import pyglet
+import sys
 import yaml
-from typing import List, Dict, Tuple, NamedTuple, Any
+from pprint import pprint
+from typing import List, NamedTuple
 
 
 class ItemGeneral(NamedTuple):
@@ -10,16 +11,28 @@ class ItemGeneral(NamedTuple):
     type: str
 
 
-class ItemWeapon(ItemGeneral):
+class ItemWeapon(NamedTuple):
+    id: int
+    name: str
+    description: str
+    type: str
     damage: int
 
 
-class ItemArmor(ItemGeneral):
-    damage: int
+class ItemArmor(NamedTuple):
+    id: int
+    name: str
+    description: str
+    type: str
+    defense: int
 
 
-class ItemFood(ItemGeneral):
-    damage: int
+class ItemFood(NamedTuple):
+    id: int
+    name: str
+    description: str
+    type: str
+    hp_restored: int
 
 
 item_type_to_class = {
@@ -30,27 +43,27 @@ item_type_to_class = {
 }
 
 
-def get_item_attribute_values(
-    item_attrs: Dict[str, Any], attributes: Tuple[str, ...]
-) -> Tuple[Any, ...]:
-    assert all(
-        (attr in item_attrs for attr in attributes)
-    ), f"Attributes from {attributes} not found in {item_attrs}!"
-    return tuple(item_attrs[attr] for attr in attributes)
-
-
-def load_items(filepath: str) -> List[tuple]:
+def load_items(raw_items_data: str) -> List[tuple]:
     items: List[tuple] = list()
-    items_data_file = pyglet.resource.file(filepath)
-    items_data: dict = yaml.safe_load(items_data_file)
-    for item_data in items_data:
-        if item_data["type"] in item_type_to_class:
+    for item_data in yaml.safe_load(raw_items_data):
+        try:
             item_type = item_type_to_class[item_data["type"]]
-            items.append(
-                item_type(*get_item_attribute_values(item_data, item_type._fields))
+            items.append(item_type(**item_data))
+        except KeyError:
+            print(
+                (
+                    f"Unknown item type '{item_data['type']}' for"
+                    "item with id={item_data['id']}!"
+                ),
+                file=sys.stderr,
             )
-        else:
-            print(f"Unknown item type {item_data['type']} for item {item_data['id']}!")
+            raise
+        except TypeError:
+            print(
+                "Error! Could not load the following item:", file=sys.stderr,
+            )
+            pprint(item_data, stream=sys.stderr)
+            raise
     return items
 
 
