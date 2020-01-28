@@ -1,8 +1,8 @@
-import os
 import pytest
 
 from array import array
 from game_map import GameMap
+from tests.utils import get_relative_path
 
 
 sample_map_data = (
@@ -11,10 +11,6 @@ sample_map_data = (
     array("I", (1, 1, 1)),
 )
 sample_game_map = GameMap(sample_map_data, 3, 3)
-
-
-def get_relative_path(filepath: str):
-    return os.path.join(os.path.dirname(__file__), filepath)
 
 
 def test_game_map_init():

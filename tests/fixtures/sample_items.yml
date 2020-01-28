@@ -1,0 +1,22 @@
+- id: 1
+  name: "test"
+  description: "test description"
+  type: "general"
+
+- id: 2
+  name: "test weapon"
+  description: "test weapon description"
+  type: "weapon"
+  damage: 5
+
+- id: 3
+  name: "test armor"
+  description: "test armor description"
+  type: "armor"
+  defense: 10
+
+- id: 4
+  name: "test food"
+  description: "test food description"
+  type: "food"
+  hp_restored: 15
