@@ -14,7 +14,7 @@ class GameMap:
         return self.map_data[y][x]
 
     @staticmethod
-    def load_mapfile(path: str, delimiter: str = ",") -> Tuple[tuple, int, int]:
+    def load_mapfile(path: str) -> Tuple[tuple, int, int]:
         # Works only with rectangular maps
         map_width, map_height = 0, 0
         map_data = list()
@@ -22,7 +22,7 @@ class GameMap:
         with open(path, "r") as mapfile:
             # Read the level map from the bottom-left to the top-right
             for line in reversed(list(mapfile)):
-                split_line = line.strip().split(delimiter)
+                split_line = line.strip().split(",")
 
                 if map_width == 0:
                     map_width = len(split_line)
@@ -38,5 +38,5 @@ class GameMap:
         return tuple(map_data), map_width, map_height
 
     @staticmethod
-    def from_file(path: str, delimiter: str = ",") -> "GameMap":
-        return GameMap(*GameMap.load_mapfile(path, delimiter))
+    def from_file(path: str) -> "GameMap":
+        return GameMap(*GameMap.load_mapfile(path))

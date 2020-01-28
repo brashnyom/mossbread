@@ -53,15 +53,6 @@ def test_game_map_load_mapfile():
     assert map_data[2][1] == 1
 
 
-def test_game_map_load_mapfile_different_delim():
-    map_data, width, height = GameMap.load_mapfile(
-        get_relative_path("fixtures/sample_map_different_delim.txt"), delimiter=" "
-    )
-    assert map_data == sample_map_data
-    assert width == 3
-    assert height == 3
-
-
 def test_game_map_load_mapfile_nonrectangular():
     with pytest.raises(AssertionError):
         GameMap.load_mapfile(
