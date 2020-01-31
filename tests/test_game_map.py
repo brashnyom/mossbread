@@ -2,67 +2,58 @@ import pytest
 
 from array import array
 from game_map import GameMap
-from tests.utils import get_relative_path
+from tests.conftest import get_relative_path
 
 
-sample_map_data = (
-    array("I", (1, 2, 1)),
-    array("I", (1, 0, 1)),
-    array("I", (1, 1, 1)),
-)
-sample_game_map = GameMap(sample_map_data, 3, 3)
-
-
-def test_game_map_init():
-    assert sample_game_map.map_data == sample_map_data
-    assert sample_game_map.width == 3
-    assert sample_game_map.height == 3
-
-
-def test_game_map_get():
-    for x in range(0, 3):
-        for y in range(0, 3):
-            assert sample_game_map.get(x, y) == sample_map_data[y][x]
-
-
-def test_game_map_get_out_of_bounds():
-    with pytest.raises(AssertionError):
-        sample_game_map.get(-1, 0)
-        sample_game_map.get(0, -1)
-        sample_game_map.get(-1, -1)
-        sample_game_map.get(3, 0)
-        sample_game_map.get(0, 3)
-        sample_game_map.get(3, 3)
-
-
-def test_game_map_load_mapfile():
-    map_data, width, height = GameMap.load_mapfile(
-        get_relative_path("fixtures/sample_map.txt")
+sample_map_data = tuple(
+    reversed(
+        (
+            array("I", (1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)),
+            array("I", (1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1)),
+            array("I", (1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1)),
+            array("I", (1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 1)),
+            array("I", (1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1)),
+            array("I", (1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1)),
+            array("I", (1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1)),
+            array("I", (1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1)),
+            array("I", (1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1)),
+            array("I", (1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1)),
+            array("I", (1, 0, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 0, 1)),
+            array("I", (1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1)),
+            array("I", (1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1)),
+            array("I", (1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1)),
+            array("I", (1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1)),
+            array("I", (1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1)),
+            array("I", (1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1)),
+            array("I", (1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1)),
+            array("I", (1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1)),
+            array("I", (1, 0, 0, 0, 1, 1, 0, 1, 0, 1, 1, 0, 0, 0, 1, 1, 0, 1, 0, 1, 1)),
+            array("I", (1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)),
+        )
     )
-    assert map_data == sample_map_data
-    assert width == 3
-    assert height == 3
+)
 
-    # Assert map is read right-up (since (0,0) is bottom-left)
-    assert map_data[0][1] == 2
-    assert map_data[1][1] == 0
-    assert map_data[2][1] == 1
+
+def test_game_map_from_file(test_game_map):
+    assert test_game_map.map_data == sample_map_data
+    assert test_game_map.width == 21
+    assert test_game_map.height == 21
+
+    # Assert map is read right-up
+    assert test_game_map.get(2, 2) == 0
+    assert test_game_map.get(2, 18) == 1
+
+
+def test_game_map_get_out_of_bounds(test_game_map):
+    with pytest.raises(AssertionError):
+        test_game_map.get(-1, 0)
+        test_game_map.get(0, -1)
+        test_game_map.get(-1, -1)
+        test_game_map.get(21, 0)
+        test_game_map.get(0, 21)
+        test_game_map.get(21, 21)
 
 
 def test_game_map_load_mapfile_nonrectangular():
     with pytest.raises(AssertionError):
-        GameMap.load_mapfile(
-            get_relative_path("fixtures/sample_map_nonrectangular.txt")
-        )
-
-
-def test_game_map_from_file():
-    game_map = GameMap.from_file(get_relative_path("fixtures/sample_map.txt"))
-    assert game_map.map_data == sample_map_data
-    assert game_map.width == 3
-    assert game_map.height == 3
-
-    # Assert map is read right-up
-    assert game_map.get(1, 0) == 2
-    assert game_map.get(1, 1) == 0
-    assert game_map.get(1, 2) == 1
+        GameMap.load_mapfile(get_relative_path("fixtures/map_nonrectangular.csv"))

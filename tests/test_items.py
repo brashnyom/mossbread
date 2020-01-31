@@ -14,7 +14,7 @@ from items import (
     item_type_to_class,
     load_items,
 )
-from tests.utils import get_relative_path
+from tests.conftest import get_relative_path
 
 
 sample_general_item = ItemGeneral(
@@ -55,7 +55,7 @@ def test_item_type_to_class():
 
 
 def test_load_items():
-    with open(get_relative_path("fixtures/sample_items.yml"), "r") as infile:
+    with open(get_relative_path("fixtures/items.yml"), "r") as infile:
         items = load_items(infile.read())
     assert len(items) == 4
     assert set(items) == set(

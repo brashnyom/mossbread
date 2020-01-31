@@ -1,0 +1,12 @@
+0: # floor
+  sheet_x: 0
+  sheet_y: 0
+  solid: false
+1: # wall
+  sheet_x: 1
+  sheet_y: 0
+  solid: true
+2: # player sprite
+  sheet_x: 2
+  sheet_y: 0
+  solid: false
