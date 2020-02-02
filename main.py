@@ -1,28 +1,21 @@
 import pyglet
 import yaml
 
-from typing import Dict
-
 from pyglet.window import key
 
-from rendering import Rendering
+from rendering import Tileset, Rendering
 from game_map import GameMap
 from entities import EntityHandler, breadth_first_search
 
 
-def load_tile_data(filepath: str) -> Dict[int, Dict[str, int]]:
-    tile_data_file = pyglet.resource.file(filepath)
-    tile_data = yaml.safe_load(tile_data_file)
-    tile_data_file.close()
-    return tile_data
+tile_data_file = pyglet.resource.file("assets/tiles.yml")
+tile_data = yaml.safe_load(tile_data_file)
+tile_data_file.close()
 
-
-tile_data = load_tile_data("assets/tiles.yml")
-
-
-game_map = GameMap.from_file("assets/sample_map.txt")
-rendering = Rendering(game_map, tile_data)
-entity_handler = EntityHandler(game_map, rendering, tile_data)
+tileset = Tileset("assets/sample_tileset.png", tile_data)
+game_map = GameMap.from_file("assets/sample_map.txt", tile_data)
+rendering = Rendering(tileset)
+entity_handler = EntityHandler(game_map)
 
 entity_handler.spawn_entity(1, 1, 5)
 entity_handler.spawn_entity(47, 2, 5)
@@ -30,9 +23,12 @@ entity_handler.spawn_entity(47, 2, 5)
 player = entity_handler.entities[0]
 npc = entity_handler.entities[1]
 
+rendering.add_entity(player)
+rendering.add_entity(npc)
+
 rendering.center_camera(npc.x, npc.y)
 
-npc_path = breadth_first_search(game_map, tile_data, (47, 2), (9, 3))
+npc_path = breadth_first_search(game_map, (47, 2), (9, 3))
 
 
 @rendering.window.event
@@ -51,13 +47,13 @@ def on_key_press(symbol, modifiers):
 @rendering.window.event
 def on_draw():
     rendering.window.clear()
-    rendering.draw_map()
-    entity_handler.update_entities()
+    rendering.draw_map(game_map)
+    rendering.draw_entities(entity_handler.entities)
 
 
 def update_npc_pos(dt):
     if npc_path:
-        next_node = npc_path.pop()
+        next_node = npc_path.popleft()
         next_x = next_node[0] - npc.x
         next_y = next_node[1] - npc.y
 
