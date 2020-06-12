@@ -5,7 +5,8 @@ from pyglet.window import key
 
 from rendering import Tileset, Rendering
 from game_map import GameMap
-from entities import EntityHandler, breadth_first_search
+from entities import EntityHandler
+from pathfinding import breadth_first_search
 
 
 tile_data_file = pyglet.resource.file("assets/tiles.yml")
@@ -13,12 +14,12 @@ tile_data = yaml.safe_load(tile_data_file)
 tile_data_file.close()
 
 tileset = Tileset("assets/sample_tileset.png", tile_data)
-game_map = GameMap.from_file("assets/sample_map.txt", tile_data)
+game_map = GameMap.from_file("assets/courtyard.csv", tile_data)
 rendering = Rendering(tileset)
 entity_handler = EntityHandler(game_map)
 
-entity_handler.spawn_entity(1, 1, 5)
-entity_handler.spawn_entity(47, 2, 5)
+entity_handler.spawn_entity(1, 1, 6)
+entity_handler.spawn_entity(47, 2, 6)
 
 player = entity_handler.entities[0]
 npc = entity_handler.entities[1]
